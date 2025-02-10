@@ -1,6 +1,13 @@
 class Board:
     def __init__(self, board):
         self.board = board
+    def __str__(self):
+        board_str = ''
+        for row in self.board:
+            row_str = [str(i) if i != 0 else '*' for i in row]
+            board_str += " ".join(row_str)
+            board_str += '\n'
+        return board_str
     def find_empty_cell(self):
         for row, contents in enumerate(self.board):
             try:
@@ -34,6 +41,19 @@ class Board:
             if self.is_valid(next_empty, guess):
                 row, col = next_empty
                 self.board[row][col] = guess
+                if self.solver():
+                    return True
+                self.board[row][col] = 0
+        return False
+
+def solve_sudoku(board):
+    gameboard = Board(board)
+    print(f'Puzzle to solve:\n{gameboard}')
+    if gameboard.solver():
+        print(f'Solved puzzle:\n{gameboard}')
+    else:
+        print('The provided puzzle is unsolvable.')
+    return gameboard
 
 puzzle = [
   [0, 0, 2, 0, 0, 8, 0, 0, 0],
@@ -47,4 +67,4 @@ puzzle = [
   [1, 7, 0, 0, 0, 6, 0, 0, 5]
 ]
 
-gameboard = Board(puzzle)
+solve_sudoku(puzzle)
